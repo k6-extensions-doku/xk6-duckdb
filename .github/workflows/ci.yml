@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.21'
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential
+        go install go.k6.io/xk6/cmd/xk6@latest
+    
+    - name: Verify dependencies
+      run: go mod verify
+    
+    - name: Build extension
+      run: |
+        CGO_ENABLED=1 xk6 build --with github.com/${{ github.repository }}=.
+    
+    - name: Run tests
+      run: |
+        ./k6 run test.js
+
+  build-cross-platform:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.21'
+    
+    - name: Install xk6
+      run: go install go.k6.io/xk6/cmd/xk6@latest
+    
+    - name: Build on Unix
+      if: matrix.os != 'windows-latest'
+      run: |
+        CGO_ENABLED=1 xk6 build --with github.com/${{ github.repository }}=.
+    
+    - name: Build on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        $env:CGO_ENABLED = "1"
+        xk6 build --with github.com/${{ github.repository }}=.

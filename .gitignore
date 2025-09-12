@@ -1,0 +1,27 @@
+# Binaries
+k6
+k6.exe
+*.exe
+
+# Build artifacts
+build/
+dist/
+
+# Go specific
+vendor/
+*.so
+*.dylib
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test artifacts
+*.log
+*.db
