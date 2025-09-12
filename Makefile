@@ -3,7 +3,7 @@
 # Variables
 BINARY_NAME := k6
 XK6_VERSION := latest
-MODULE_NAME := github.com/example/xk6-duckdb
+MODULE_NAME := github.com/k6-extensions-doku/xk6-duckdb
 BUILD_DIR := build
 TEST_SCRIPT := test.js
 

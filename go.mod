@@ -1,4 +1,4 @@
-module github.com/example/xk6-duckdb
+module github.com/k6-extensions-doku/xk6-duckdb
 
 go 1.24
 

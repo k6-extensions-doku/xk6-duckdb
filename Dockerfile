@@ -26,7 +26,7 @@ COPY . .
 # Build k6 with DuckDB extension
 RUN CGO_ENABLED=1 xk6 build \
     --output k6 \
-    --with github.com/example/xk6-duckdb=.
+    --with github.com/k6-extensions-doku/xk6-duckdb=.
 
 # Stage 2: Runtime stage
 FROM alpine:3.18

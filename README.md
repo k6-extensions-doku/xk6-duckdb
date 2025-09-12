@@ -35,7 +35,7 @@ mkdir xk6-duckdb && cd xk6-duckdb
 
 4. Build k6 with the DuckDB extension:
 ```bash
-xk6 build --with github.com/example/xk6-duckdb=.
+xk6 build --with github.com/k6-extensions-doku/xk6-duckdb=.
 ```
 
 This will create a `k6` binary in your current directory with the DuckDB extension included.
@@ -352,7 +352,7 @@ sudo apt-get update && sudo apt-get install build-essential
 
 # Enable CGO
 export CGO_ENABLED=1
-xk6 build --with github.com/example/xk6-duckdb=.
+xk6 build --with github.com/k6-extensions-doku/xk6-duckdb=.
 ```
 
 **Windows Build Issues**
@@ -422,4 +422,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - [k6 Community Forum](https://community.k6.io/)
 - [DuckDB Documentation](https://duckdb.org/docs/)
-- [GitHub Issues](https://github.com/example/xk6-duckdb/issues)
+- [GitHub Issues](https://github.com/k6-extensions-doku/xk6-duckdb/issues)
