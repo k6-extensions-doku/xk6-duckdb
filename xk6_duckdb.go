@@ -384,13 +384,13 @@ type DuckDBAppender struct {
 
 // AppendRow appends a single row to the appender
 // Usage: appender.appendRow([1, "John", "john@example.com"])
-func (a *DuckDBAppender) AppendRow(values []interface{}) error {
+func (a *DuckDBAppender) AppendRow(values []driver.Value) error {
 	return a.appender.AppendRow(values...)
 }
 
 // AppendRows appends multiple rows efficiently
 // Usage: appender.appendRows([[1, "John"], [2, "Jane"], [3, "Bob"]])
-func (a *DuckDBAppender) AppendRows(rows [][]interface{}) error {
+func (a *DuckDBAppender) AppendRows(rows [][]driver.Value) error {
 	for _, row := range rows {
 		if err := a.appender.AppendRow(row...); err != nil {
 			return fmt.Errorf("failed to append row: %w", err)
@@ -440,32 +440,19 @@ func (conn *DuckDBConnection) DisableProfiling() error {
 }
 
 // GetProfilingInfo retrieves profiling information for the last query
-func (conn *DuckDBConnection) GetProfilingInfo() (*ProfilingInfo, error) {
+func (conn *DuckDBConnection) GetProfilingInfo() (*duckdb.ProfilingInfo, error) {
 	if conn.conn == nil {
 		return nil, fmt.Errorf("need dedicated connection")
 	}
 	
-	var driverConn driver.Conn
-	err := conn.conn.Raw(func(dc interface{}) error {
-		driverConn = dc.(driver.Conn)
-		return nil
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to get driver connection: %w", err)
-	}
-	
-	info, err := duckdb.GetProfilingInfo(driverConn)
+	info, err := duckdb.GetProfilingInfo(conn.conn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get profiling info: %w", err)
 	}
 	
-	return &ProfilingInfo{
-		Query:           info.Query,
-		ExecutionTime:   info.ExecutionTime.String(),
-		PlanningTime:    info.PlanningTime.String(),
-		OptimizationTime: info.OptimizationTime.String(),
-		Metrics:         info.Metrics,
-	}, nil
+	// Return a pointer to the profiling info
+	// The info variable is a struct value, so we return its address
+	return &info, nil
 }
 
 // ProfilingInfo contains query profiling information
